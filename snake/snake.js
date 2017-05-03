@@ -1,10 +1,3 @@
-Snake.DIRS = {
-  'N': [-1, 0],
-  'S': [1, 0],
-  'E': [0, 1],
-  'W': [-1, 0]
-};
-
 class Snake {
   constructor(board) {
     this.direction = "N";
@@ -36,5 +29,12 @@ class Snake {
         }
   }
 }
+
+Snake.DIRS = {
+  'N': [-1, 0],
+  'S': [1, 0],
+  'E': [0, 1],
+  'W': [-1, 0]
+};
 
 module.exports = Snake;

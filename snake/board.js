@@ -4,6 +4,7 @@ class Board {
   constructor(length) {
     this.snake = new Snake(this);
     this.length = length;
+    this.grid = this.setup();
   }
 
   setup() {
