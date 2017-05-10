@@ -3,7 +3,7 @@ class Snake {
     this.direction = "N";
     this.board = board;
 
-    const mid = Math.random(this.board.length/2);
+    const mid = Math.floor(this.board.length/2) - 1;
     const center = [mid, mid];
     this.segments = [center];
   }
@@ -13,11 +13,20 @@ class Snake {
     const currPos = this.segments[0];
     const newX = currPos[0] + currDir[0];
     const newY = currPos[1] + currDir[1];
-    this.segments.push(newX, newY);
+    this.checkGameover(newX, newY);
+    this.segments.push([newX, newY]);
+    this.segments.shift();
+  }
+
+  checkGameover(x, y) {
+    if (x < 0 || y < 0 ||
+        x >= this.board.length || y >= this.board.length ) {
+          this.segments = [];
+    }
   }
 
   checkOpposite(x, y, dir) {
-    this.direction === x && dir !== y;
+    return this.direction === x && dir !== y;
   }
 
   turn(newDir) {
@@ -34,7 +43,7 @@ Snake.DIRS = {
   'N': [-1, 0],
   'S': [1, 0],
   'E': [0, 1],
-  'W': [-1, 0]
+  'W': [0, -1]
 };
 
 module.exports = Snake;

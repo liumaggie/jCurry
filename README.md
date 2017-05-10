@@ -43,6 +43,7 @@ This is the core function of this library. It wraps around queried elements, con
 
 1. It may take in a CSS selector, such as `'li'`, to select all the `li` elements on the page.
 2. It may take in an HTMLElement, such as `<p></p>`, to select all the `<p></p>` elements on the page.
+3. It may take in the `window` to return it as a `DOMNodeCollection` for adding event listeners such as `'keydown'`.
 3. It may take in a function that will be stored in a queue of functions that would be executed when the `document` is `ready`.
 
 ```javascript
@@ -52,8 +53,8 @@ window.$l = (selector) =>
     const nodeList = document.querySelectorAll(selector);
     const collection = Array.from(nodeList);
     return new DOMNodeCollection(collection);
-  // used as a selector for a certain HTMLElement
-  } else if (selector instanceof HTMLElement) {
+  // used as a selector for a certain HTMLElement or the window
+  } else if (selector instanceof HTMLElement || selector === window) {
     return new DOMNodeCollection([selector]);
   // used as a way to invoke or store the callbacks when the // document is fully loaded
   } else if (typeof selector === 'function') {
@@ -65,7 +66,7 @@ window.$l = (selector) =>
   }
 };
 ```
-In the first two ways to use `$l`, the queried elements are returned as a `DOMNodeCollection` so they have access to methods for traversing, updating or manipulating the DOM.
+In the first three ways to use `$l`, the queried elements are returned as a `DOMNodeCollection` so they have access to methods for traversing, updating or manipulating the DOM.
 
 ### DOM Traversal
 
@@ -134,6 +135,6 @@ Arguments include:
   * success: Callback on success
   * error: Callback if there's an error
 
-### Example
+## Example
 
 Check out this Snake demo for an example of using this jCurry library.

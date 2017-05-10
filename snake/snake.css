@@ -1,3 +1,16 @@
 .snake-game {
   display: flex;
 }
+
+li {
+  border: 1px solid black;
+  padding: 20px;
+}
+
+.snake {
+  background: lightblue;
+}
+
+.apple {
+  background: yellow;
+}

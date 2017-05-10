@@ -1,10 +1,13 @@
 const Snake = require('./snake');
+const Apple = require('./apple');
 
 class Board {
   constructor(length) {
-    this.snake = new Snake(this);
     this.length = length;
+    this.snake = new Snake(this);
     this.grid = this.setup();
+    this.render();
+    this.renderApple();
   }
 
   setup() {
@@ -19,14 +22,24 @@ class Board {
     return grid;
   }
 
+  renderApple() {
+    let x = Math.floor(Math.random() * this.length);
+    let y = Math.floor(Math.random() * this.length);
+    while (this.grid[x][y] === "S") {
+      x = Math.floor(Math.random() * this.length);
+      y = Math.floor(Math.random() * this.length);
+    }
+    this.apple = new Apple(x, y);
+    this.grid[x][y] = "A";
+  }
+
   render() {
-    const grid = this.setup();
     this.snake.segments.forEach((segment) => {
       const x = segment[0];
       const y = segment[1];
-      grid[x][y] = "S";
+      this.grid[x][y] = "S";
     });
-
+    this.renderApple();
   }
 
 }
