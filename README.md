@@ -114,10 +114,10 @@ In the first two ways to use `$l`, the queried elements are returned as a `DOMNo
 ### Event Handling
 
 #### **`on`**
-** Attaches an event handler callback for the `eventType` on each element of the `DOMNodeCollection`.
+* Attaches an event handler callback for the `eventType` on each element of the `DOMNodeCollection`.
 
 #### **`off`**
-** Removes event handler for each element of the `DOMNodeCollection`.
+* Removes event handler for each element of the `DOMNodeCollection`.
 
 ### Ajax
 
