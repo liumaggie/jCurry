@@ -5,17 +5,28 @@ class Snake {
 
     const mid = Math.floor(this.board.length/2) - 1;
     const center = [mid, mid];
-    this.segments = [center];
+    this.segments = [center, [mid+1, mid], [mid+2, mid], [mid+3, mid]];
   }
 
   move() {
     const currDir = Snake.DIRS[this.direction];
     const currPos = this.segments[0];
-    const newX = currPos[0] + currDir[0];
-    const newY = currPos[1] + currDir[1];
+
+    const first = this.segments[0];
+    const newX = first[0] + currDir[0];
+    const newY = first[1] + currDir[1];
+
     this.checkGameover(newX, newY);
-    this.segments.push([newX, newY]);
-    this.segments.shift();
+    this.segments.unshift([newX, newY]);
+    this.segments.pop();
+  }
+
+  eatApple() {
+    const head = this.segments[0];
+    if (this.board.grid[head[0]][head[1]] === 'A') {
+      return true;
+    }
+    return false;
   }
 
   checkGameover(x, y) {

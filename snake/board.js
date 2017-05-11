@@ -30,7 +30,6 @@ class Board {
       y = Math.floor(Math.random() * this.length);
     }
     this.apple = new Apple(x, y);
-    this.grid[x][y] = "A";
   }
 
   render() {
@@ -39,7 +38,10 @@ class Board {
       const y = segment[1];
       this.grid[x][y] = "S";
     });
-    this.renderApple();
+
+    if (this.snake.eatApple()) {
+      this.renderApple();
+    }
   }
 
 }

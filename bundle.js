@@ -77,17 +77,28 @@ class Snake {
 
     const mid = Math.floor(this.board.length/2) - 1;
     const center = [mid, mid];
-    this.segments = [center];
+    this.segments = [center, [mid+1, mid], [mid+2, mid], [mid+3, mid]];
   }
 
   move() {
     const currDir = Snake.DIRS[this.direction];
     const currPos = this.segments[0];
-    const newX = currPos[0] + currDir[0];
-    const newY = currPos[1] + currDir[1];
+
+    const first = this.segments[0];
+    const newX = first[0] + currDir[0];
+    const newY = first[1] + currDir[1];
+
     this.checkGameover(newX, newY);
-    this.segments.push([newX, newY]);
-    this.segments.shift();
+    this.segments.unshift([newX, newY]);
+    this.segments.pop();
+  }
+
+  eatApple() {
+    const head = this.segments[0];
+    if (this.board.grid[head[0]][head[1]] === 'A') {
+      return true;
+    }
+    return false;
   }
 
   checkGameover(x, y) {
@@ -131,13 +142,14 @@ const Snake = __webpack_require__(0);
 class SnakeView {
   constructor($el) {
     this.$el = $el;
-    this.board = new Board(10);
-    this.render();
+    this.board = new Board(20);
+    this.renderGrid();
     this.updateRender();
     // this.renderApple();
 
     $l(window).on('keydown', this.handleKey.bind(this));
     this.interval = window.setInterval(this.step.bind(this), 500);
+    // this.addClasses = this.addClasses.bind(this);
   }
 
   handleKey(event) {
@@ -153,7 +165,7 @@ class SnakeView {
     }
   }
 
-  render() {
+  renderGrid() {
     let html = "";
     for (let i=0; i < this.board.length; i++) {
       html += "<ul>";
@@ -166,33 +178,26 @@ class SnakeView {
   }
 
   updateRender() {
-    let allUl = $l('ul');
-
-    this.board.snake.segments.forEach((segment) => {
-      const row = segment[1];
-      const col = segment[0];
-      const snakeRow = allUl.htmlElements[row];
-
-      $l(snakeRow).addClass('row-of-snake');
-      let liInRow = $l('ul.row-of-snake');
-
-      const snakeLi = liInRow.children().htmlElements[col];
-      $l(snakeLi).addClass('snake');
+    this.board.snake.segments.forEach((segment, idx) => {
+      this.addClasses(segment, 'snake', idx);
     });
-    this.renderApple();
+
+    this.addClasses(this.board.apple.pos, 'apple');
   }
 
-  renderApple() {
+  addClasses(obj, type, idx) {
     let allUl = $l('ul');
-    const row = this.board.apple.pos[0];
-    const col = this.board.apple.pos[1];
-    // debugger
-    const appleRow = allUl.htmlElements[row];
-    $l(appleRow).addClass('row-of-apple');
-    let liInRowOfApple = $l('ul.row-of-apple');
+    const row = obj[0];
+    const col = obj[1];
 
-    const appleLi = liInRowOfApple.children().htmlElements[col];
-    $l(appleLi).addClass('apple');
+    const objCol = allUl.selectEl(col);
+    $l(objCol).addClass(`col-of-${type}-${idx}`);
+
+    let ulCol = $l(`ul.col-of-${type}-${idx}`);
+
+    const allLiInCol = ulCol.children();
+    const objLi = allLiInCol.selectEl(row);
+    $l(objLi).addClass(`${type}`);
   }
 
 
@@ -200,7 +205,8 @@ class SnakeView {
     this.board.render();
     if (this.board.snake.segments.length > 0) {
       this.board.snake.move();
-      this.render();
+      this.board.snake.eatApple();
+      this.renderGrid();
       this.updateRender();
     }
     // } else {
@@ -249,7 +255,6 @@ class Board {
       y = Math.floor(Math.random() * this.length);
     }
     this.apple = new Apple(x, y);
-    this.grid[x][y] = "A";
   }
 
   render() {
@@ -258,7 +263,10 @@ class Board {
       const y = segment[1];
       this.grid[x][y] = "S";
     });
-    this.renderApple();
+
+    if (this.snake.eatApple()) {
+      this.renderApple();
+    }
   }
 
 }

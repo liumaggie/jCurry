@@ -4,13 +4,14 @@ const Snake = require('./snake');
 class SnakeView {
   constructor($el) {
     this.$el = $el;
-    this.board = new Board(10);
-    this.render();
+    this.board = new Board(20);
+    this.renderGrid();
     this.updateRender();
     // this.renderApple();
 
     $l(window).on('keydown', this.handleKey.bind(this));
     this.interval = window.setInterval(this.step.bind(this), 500);
+    // this.addClasses = this.addClasses.bind(this);
   }
 
   handleKey(event) {
@@ -26,7 +27,7 @@ class SnakeView {
     }
   }
 
-  render() {
+  renderGrid() {
     let html = "";
     for (let i=0; i < this.board.length; i++) {
       html += "<ul>";
@@ -39,33 +40,26 @@ class SnakeView {
   }
 
   updateRender() {
-    let allUl = $l('ul');
-
-    this.board.snake.segments.forEach((segment) => {
-      const row = segment[1];
-      const col = segment[0];
-      const snakeRow = allUl.htmlElements[row];
-
-      $l(snakeRow).addClass('row-of-snake');
-      let liInRow = $l('ul.row-of-snake');
-
-      const snakeLi = liInRow.children().htmlElements[col];
-      $l(snakeLi).addClass('snake');
+    this.board.snake.segments.forEach((segment, idx) => {
+      this.addClasses(segment, 'snake', idx);
     });
-    this.renderApple();
+
+    this.addClasses(this.board.apple.pos, 'apple');
   }
 
-  renderApple() {
+  addClasses(obj, type, idx) {
     let allUl = $l('ul');
-    const row = this.board.apple.pos[0];
-    const col = this.board.apple.pos[1];
-    // debugger
-    const appleRow = allUl.htmlElements[row];
-    $l(appleRow).addClass('row-of-apple');
-    let liInRowOfApple = $l('ul.row-of-apple');
+    const row = obj[0];
+    const col = obj[1];
 
-    const appleLi = liInRowOfApple.children().htmlElements[col];
-    $l(appleLi).addClass('apple');
+    const objCol = allUl.selectEl(col);
+    $l(objCol).addClass(`col-of-${type}-${idx}`);
+
+    let ulCol = $l(`ul.col-of-${type}-${idx}`);
+
+    const allLiInCol = ulCol.children();
+    const objLi = allLiInCol.selectEl(row);
+    $l(objLi).addClass(`${type}`);
   }
 
 
@@ -73,7 +67,8 @@ class SnakeView {
     this.board.render();
     if (this.board.snake.segments.length > 0) {
       this.board.snake.move();
-      this.render();
+      this.board.snake.eatApple();
+      this.renderGrid();
       this.updateRender();
     }
     // } else {
