@@ -5,54 +5,80 @@ class Snake {
 
     const mid = Math.floor(this.board.length/2) - 1;
     const center = [mid, mid];
-    this.segments = [center, [mid+1, mid], [mid+2, mid], [mid+3, mid]];
+    this.segments = [center];
+  }
+
+  head() {
+    return this.segments.slice(-1)[0];
   }
 
   move() {
     const currDir = Snake.DIRS[this.direction];
-    const currPos = this.segments[0];
-
-    const first = this.segments[0];
+    let first = this.head();
     const newX = first[0] + currDir[0];
     const newY = first[1] + currDir[1];
-
     this.checkGameover(newX, newY);
-    this.segments.unshift([newX, newY]);
-    const last = this.segments.pop();
+
+    this.segments.push([newX, newY]);
+    this.segments.shift();
+
 
     if (this.segments.length !== 0 && this.eatApple()) {
-      const lastPos = this.segments.slice(-1)[0];
-      const newPos = [lastPos[0] + currDir[0], lastPos[1] + currDir[1]];
-      this.segments.push(newPos);
-      this.board.renderApple();
+      first = this.head();
+      const newPos = [first[0] + currDir[0], first[1] + currDir[1]];
+      if (!this.offBoundaries(newPos[0], newPos[1])) {
+        this.segments.push(newPos);
+      } else {
+        const tail = this.segments[0];
+        this.segments.unshift([tail[0] - currDir[0], tail[1] - currDir[1]]);
+      }
+      this.board.apple.updateApple();
     }
   }
 
+  isOccupied(pos) {
+    let occupied = false;
+    this.segments.forEach((segment) => {
+      if (segment[0] === pos[0] && segment[1] === pos[1]) {
+        occupied = true;
+      }
+    });
+    return occupied;
+  }
+
+  offBoundaries(x, y) {
+    if (x < 0 || y < 0 ||
+      x >= this.board.length || y >= this.board.length) {
+        return true;
+    }
+    return false;
+  }
+
   eatApple() {
-    const head = this.segments[0];
+    const head = this.head();
     const x = head[0];
     const y = head[1];
-    if (this.board.grid[x][y] === 'A') {
-      this.board.grid[x][y] = ' ';
+
+    if (x === this.board.apple.pos[0] && y === this.board.apple.pos[1]) {
       return true;
     }
     return false;
   }
 
   collide() {
-    for (let i=1; i < this.segments.length; i++) {
-      if (this.segments[i] === this.segments[0]) {
-        return true;
+    for (let i=0; i < this.segments.length-1; i++) {
+      // checks if any snake segments are equal to the first segment
+      if (this.segments[i][0] === this.head()[0] &&
+        this.segments[i][1] === this.head()[1]) {
+          return true;
       }
     }
     return false;
   }
 
   checkGameover(x, y) {
-    if (x < 0 || y < 0 ||
-        x >= this.board.length || y >= this.board.length ||
-        this.collide()) {
-          this.segments = [];
+    if (this.offBoundaries(x, y) || this.collide()) {
+      this.segments = [];
     }
   }
 

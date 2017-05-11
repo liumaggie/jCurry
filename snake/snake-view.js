@@ -7,11 +7,9 @@ class SnakeView {
     this.board = new Board(20);
     this.renderGrid();
     this.updateRender();
-    // this.renderApple();
 
     $l(window).on('keydown', this.handleKey.bind(this));
-    this.interval = window.setInterval(this.step.bind(this), 200);
-    // this.addClasses = this.addClasses.bind(this);
+    this.interval = window.setInterval(this.step.bind(this), 100);
   }
 
   handleKey(event) {
@@ -51,14 +49,16 @@ class SnakeView {
     const row = obj[0];
     const col = obj[1];
 
-    const objCol = allUl.selectEl(col);
-    $l(objCol).addClass(`col-of-${type}-${idx}`);
+    if (!this.board.snake.offBoundaries()) {
+      const objCol = allUl.selectEl(col);
+      $l(objCol).addClass(`col-of-${type}-${idx}`);
 
-    let ulCol = $l(`ul.col-of-${type}-${idx}`);
+      let ulCol = $l(`ul.col-of-${type}-${idx}`);
 
-    const allLiInCol = ulCol.children();
-    const objLi = allLiInCol.selectEl(row);
-    $l(objLi).addClass(`${type}`);
+      const allLiInCol = ulCol.children();
+      const objLi = allLiInCol.selectEl(row);
+      $l(objLi).addClass(`${type}`);
+    }
   }
 
 

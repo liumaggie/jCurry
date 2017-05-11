@@ -29,7 +29,8 @@ h1 {
 }
 
 .fa:hover {
-  color: lightblue;
+  color: lightgreen;
+  cursor: pointer;
 }
 
 li {
@@ -37,9 +38,9 @@ li {
 }
 
 .snake {
-  background: lightblue;
+  background: lightgreen;
 }
 
 .apple {
-  background: yellow;
+  background: pink;
 }
