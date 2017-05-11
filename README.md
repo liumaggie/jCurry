@@ -39,7 +39,7 @@ jCurry is a library to simplify DOM manipulation inspired by jQuery. With this l
 
 ### `$l`
 
-This is the core function of this library. It wraps around queried elements, converting them into a `DOMNodeCollection` (an array of HTMLElements) to easily traverse and manipulate the DOM. It may receive three different types of arguments as explained below.
+This is the core function of this library. It wraps around queried elements, converting them into a `DOMNodeCollection` (an array of HTMLElements) to easily traverse and manipulate the DOM. It may receive four different types of arguments as explained below.
 
 1. It may take in a CSS selector, such as `'li'`, to select all the `li` elements on the page.
 2. It may take in an HTMLElement, such as `<p></p>`, to select all the `<p></p>` elements on the page.
