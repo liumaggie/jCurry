@@ -18,20 +18,40 @@ class Snake {
 
     this.checkGameover(newX, newY);
     this.segments.unshift([newX, newY]);
-    this.segments.pop();
+    const last = this.segments.pop();
+
+    if (this.segments.length !== 0 && this.eatApple()) {
+      const lastPos = this.segments.slice(-1)[0];
+      const newPos = [lastPos[0] + currDir[0], lastPos[1] + currDir[1]];
+      this.segments.push(newPos);
+      this.board.renderApple();
+    }
   }
 
   eatApple() {
     const head = this.segments[0];
-    if (this.board.grid[head[0]][head[1]] === 'A') {
+    const x = head[0];
+    const y = head[1];
+    if (this.board.grid[x][y] === 'A') {
+      this.board.grid[x][y] = ' ';
       return true;
+    }
+    return false;
+  }
+
+  collide() {
+    for (let i=1; i < this.segments.length; i++) {
+      if (this.segments[i] === this.segments[0]) {
+        return true;
+      }
     }
     return false;
   }
 
   checkGameover(x, y) {
     if (x < 0 || y < 0 ||
-        x >= this.board.length || y >= this.board.length ) {
+        x >= this.board.length || y >= this.board.length ||
+        this.collide()) {
           this.segments = [];
     }
   }

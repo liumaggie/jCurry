@@ -1,9 +1,38 @@
+body {
+  display: flex;
+  flex-direction: column;
+}
+
+h1 {
+  margin: 0 auto;
+  font-family: sans-serif;
+  font-size: 36px;
+  padding: 20px;
+}
+
 .snake-game {
   display: flex;
+  margin: 0 auto;
+  border: 1px solid gray;
+}
+
+.footer {
+  display: flex;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.footer > li > a {
+  text-decoration: none;
+  font-size: 24px;
+  color: gray;
+}
+
+.fa:hover {
+  color: lightblue;
 }
 
 li {
-  border: 1px solid black;
   padding: 10px;
 }
 

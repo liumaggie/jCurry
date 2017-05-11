@@ -90,20 +90,40 @@ class Snake {
 
     this.checkGameover(newX, newY);
     this.segments.unshift([newX, newY]);
-    this.segments.pop();
+    const last = this.segments.pop();
+
+    if (this.segments.length !== 0 && this.eatApple()) {
+      const lastPos = this.segments.slice(-1)[0];
+      const newPos = [lastPos[0] + currDir[0], lastPos[1] + currDir[1]];
+      this.segments.push(newPos);
+      this.board.renderApple();
+    }
   }
 
   eatApple() {
     const head = this.segments[0];
-    if (this.board.grid[head[0]][head[1]] === 'A') {
+    const x = head[0];
+    const y = head[1];
+    if (this.board.grid[x][y] === 'A') {
+      this.board.grid[x][y] = ' ';
       return true;
+    }
+    return false;
+  }
+
+  collide() {
+    for (let i=1; i < this.segments.length; i++) {
+      if (this.segments[i] === this.segments[0]) {
+        return true;
+      }
     }
     return false;
   }
 
   checkGameover(x, y) {
     if (x < 0 || y < 0 ||
-        x >= this.board.length || y >= this.board.length ) {
+        x >= this.board.length || y >= this.board.length ||
+        this.collide()) {
           this.segments = [];
     }
   }
@@ -148,7 +168,7 @@ class SnakeView {
     // this.renderApple();
 
     $l(window).on('keydown', this.handleKey.bind(this));
-    this.interval = window.setInterval(this.step.bind(this), 500);
+    this.interval = window.setInterval(this.step.bind(this), 200);
     // this.addClasses = this.addClasses.bind(this);
   }
 
@@ -181,7 +201,6 @@ class SnakeView {
     this.board.snake.segments.forEach((segment, idx) => {
       this.addClasses(segment, 'snake', idx);
     });
-
     this.addClasses(this.board.apple.pos, 'apple');
   }
 
@@ -202,17 +221,14 @@ class SnakeView {
 
 
   step() {
-    this.board.render();
     if (this.board.snake.segments.length > 0) {
       this.board.snake.move();
-      this.board.snake.eatApple();
       this.renderGrid();
       this.updateRender();
+    } else {
+      alert("You lose!");
+      window.clearInterval(this.interval);
     }
-    // } else {
-    //   alert("You lose!");
-    //   window.clearInterval(this.interval);
-    // }
   }
 }
 
@@ -231,7 +247,6 @@ class Board {
     this.length = length;
     this.snake = new Snake(this);
     this.grid = this.setup();
-    this.render();
     this.renderApple();
   }
 
@@ -255,6 +270,7 @@ class Board {
       y = Math.floor(Math.random() * this.length);
     }
     this.apple = new Apple(x, y);
+    this.grid[x][y] = "A";
   }
 
   render() {
@@ -263,10 +279,6 @@ class Board {
       const y = segment[1];
       this.grid[x][y] = "S";
     });
-
-    if (this.snake.eatApple()) {
-      this.renderApple();
-    }
   }
 
 }

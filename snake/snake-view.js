@@ -10,7 +10,7 @@ class SnakeView {
     // this.renderApple();
 
     $l(window).on('keydown', this.handleKey.bind(this));
-    this.interval = window.setInterval(this.step.bind(this), 500);
+    this.interval = window.setInterval(this.step.bind(this), 200);
     // this.addClasses = this.addClasses.bind(this);
   }
 
@@ -43,7 +43,6 @@ class SnakeView {
     this.board.snake.segments.forEach((segment, idx) => {
       this.addClasses(segment, 'snake', idx);
     });
-
     this.addClasses(this.board.apple.pos, 'apple');
   }
 
@@ -64,17 +63,14 @@ class SnakeView {
 
 
   step() {
-    this.board.render();
     if (this.board.snake.segments.length > 0) {
       this.board.snake.move();
-      this.board.snake.eatApple();
       this.renderGrid();
       this.updateRender();
+    } else {
+      alert("You lose!");
+      window.clearInterval(this.interval);
     }
-    // } else {
-    //   alert("You lose!");
-    //   window.clearInterval(this.interval);
-    // }
   }
 }
 
