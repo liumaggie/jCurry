@@ -137,4 +137,4 @@ Arguments include:
 
 ## Example
 
-Check out this Snake demo for an example of using this jCurry library.
+Check out this [Snake](https://github.com/liumaggie/snake) demo for an example of using this jCurry library.
