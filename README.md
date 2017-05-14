@@ -1,5 +1,9 @@
 # jCurry
 
+Check out this live [Snake](http://maggieliu.me/snake/) demo ([repo](https://github.com/liumaggie/snake)) for an example of using this jCurry library.
+
+## Background
+
 jCurry is a library to simplify DOM manipulation inspired by jQuery. With this library, users can:
 
 * Traverse and manipulate elements (i.e adding/removing elements)
@@ -134,7 +138,3 @@ Arguments include:
   * dataType: Type of data expecting back from the server
   * success: Callback on success
   * error: Callback if there's an error
-
-## Example
-
-Check out this [Snake](https://github.com/liumaggie/snake) demo for an example of using this jCurry library.
