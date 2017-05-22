@@ -139,7 +139,7 @@ Arguments include:
   * success: Callback on success
   * error: Callback if there's an error
 
-## Future Features To be Implemented
+## Future Features To Be Implemented
 
 * Return a `Promise` for the `ajax` request
 * Update the `$l` function to include all the other possible selectors, such as for creating new elements
